@@ -1,0 +1,39 @@
+name: Reset workshop state
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_reset:
+        description: 'Type RESET WORKSHOP to remove attendee cells and restore WALL.md'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reset-workshop
+  cancel-in-progress: false
+
+jobs:
+  reset:
+    if: inputs.confirm_reset == 'RESET WORKSHOP'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Restore the workshop starting state
+        shell: bash
+        run: |
+          find cells -type f -name '*.json' ! -name '_template.json' ! -name '_example.json' -delete
+          printf 'Last signed by: nobody 🔥\n' > WALL.md
+          git add cells WALL.md
+          if git diff --cached --quiet; then
+            echo 'Workshop is already in its starting state.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore: reset workshop state'
+          git push origin HEAD:main

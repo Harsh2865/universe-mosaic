@@ -13,3 +13,9 @@ Start with the [workshop guide](https://msa-srm.github.io/Github-Workshop-26/?vi
 5. Open a pull request titled with a 🍉.
 
 The validation bot checks the format and merges a valid cell automatically.
+
+## Facilitator reset
+
+After a workshop, run **Actions → Reset workshop state**, then type
+`RESET WORKSHOP` exactly. It removes attendee cell files and restores the wall;
+the live mosaic refreshes automatically on the following Pages deployment.
